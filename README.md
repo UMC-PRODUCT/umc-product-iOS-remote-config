@@ -46,31 +46,36 @@ GitHub Pages 로 서빙되며 캐시가 10분입니다. **머지 후 최대 10�
 
 #### 준비
 
-- macOS 26 이상, Xcode 26 이상
-  - 앱 아이콘을 컴파일하는 `actool` 이 Xcode 에 들어 있습니다. `swift run` 으로만 띄울 거면 Swift 6.2 이상 툴체인으로도 됩니다
+- macOS 26 이상
 - `brew install gh` 로 [GitHub CLI](https://cli.github.com) 설치
   - 앱은 `PATH` 와 `/opt/homebrew/bin`, `/usr/local/bin`, `/opt/local/bin`, `~/.local/share/mise/shims` 에서 `gh` 를 찾습니다
 - `gh auth login` 으로 로그인
   - 이 저장소에 **쓰기 권한**이 있는 계정이어야 합니다. 앱이 PR 을 직접 머지하기 때문입니다
   - 앱은 `gh auth token` 으로 토큰을 받아 GitHub API 를 부릅니다. 토큰을 따로 만들 필요는 없습니다
 
+#### 설치
+
+1. [UMC-Tree.dmg](https://github.com/UMC-PRODUCT/umc-product-iOS-remote-config/releases/latest/download/UMC-Tree.dmg) 를 받아 엽니다. 이 주소는 항상 최신 릴리즈를 가리킵니다
+2. 열린 창에서 `UMC Tree` 를 `Applications` 폴더로 끌어다 놓습니다
+3. 처음 한 번은 Apple 공증을 받지 않은 앱이라 **"UMC Tree"을(를) 열 수 없음** 창이 뜹니다. **완료** 를 누르고 아래 중 하나로 엽니다
+   - **시스템 설정 › 개인정보 보호 및 보안** 을 열어 아래쪽 **그래도 열기** 를 누릅니다
+   - 또는 터미널에서 `xattr -dr com.apple.quarantine "/Applications/UMC Tree.app"` 를 실행한 뒤 다시 켭니다
+
+앱을 `Applications` 로 옮기지 않고 DMG 나 다운로드 폴더에서 바로 켜면 자동 업데이트가 되지 않습니다.
+
+#### 업데이트
+
+- 앱은 켜질 때 새 릴리즈가 있는지 확인합니다. 새 버전이 있으면 **UMC Tree 1.1.0 이 나왔어요** 같은 알림이 뜹니다
+- **업데이트** 를 누르면 새 버전을 받아 앱을 바꿔 끼우고 다시 켭니다. 이때는 위 3번 같은 확인 창이 뜨지 않습니다
+  - 적용하지 않은 변경은 사라집니다. 알림에도 그렇게 표시됩니다
+  - 적용이 진행되는 중이면 업데이트하지 않습니다
+- 알림을 닫았다면 메뉴 막대 **UMC Tree › 업데이트 확인…** 으로 다시 확인할 수 있습니다
+- 앱 버전은 **UMC Tree에 관하여** 에서 확인합니다. 릴리즈 목록은 [Releases](https://github.com/UMC-PRODUCT/umc-product-iOS-remote-config/releases) 에 있습니다
+
 #### 실행
-
-```sh
-gh repo clone UMC-PRODUCT/umc-product-iOS-remote-config
-cd umc-product-iOS-remote-config/Editor
-./build-app.sh
-open ".build/UMC Tree.app"
-```
-
-`build-app.sh` 는 아이콘과 이름이 들어간 `UMC Tree.app` 을 `Editor/.build/` 에 만듭니다. `/Applications` 로 옮겨 두면 Spotlight 에서 바로 켤 수 있습니다. 코드를 새로 받은 뒤에는 스크립트를 다시 실행하세요.
-
-개발할 때는 `swift run` 이나 Xcode 에서 `Editor/Package.swift` 를 열고 Run 해도 됩니다. 이렇게 띄우면 앱 번들이 없어서 Dock 에 아이콘이 보이지 않습니다.
 
 - 앱은 켜질 때 `main` 의 `app-config.json` 을 불러옵니다. 창 제목 옆에 `main · 방금 불러옴` 처럼 불러온 시각이 보입니다
 - `gh` 가 없거나 로그인이 안 돼 있으면 앱 화면에 필요한 명령이 뜹니다. 터미널에서 실행한 뒤 **다시 시도** 를 누르세요
-- `swift run` 으로 띄웠다면 그 터미널 창을 닫는 순간 앱도 꺼집니다. 적용하는 동안에는 터미널을 닫지 마세요
-- 앱 버전은 메뉴 막대의 **UMC Tree에 관하여** 에서 확인합니다. 릴리즈 목록은 [Releases](https://github.com/UMC-PRODUCT/umc-product-iOS-remote-config/releases) 에 있습니다
 
 #### 화면 구성
 
@@ -303,15 +308,40 @@ open ".build/UMC Tree.app"
 | `EditorModel.swift` | 불러오기, 변경 요약, 적용 단계 진행 |
 | `GitHubClient.swift` | `gh` 토큰으로 GitHub REST API 호출. 저장소 이름·기본 브랜치 상수도 여기 있습니다 |
 | `Views/` | SwiftUI 화면 |
+| `Updater.swift` | GitHub 최신 릴리즈를 확인하고 DMG 를 받아 앱을 바꿔 끼운 뒤 다시 켭니다 |
 | `AppIcon.icon` | Icon Composer 로 만든 Liquid Glass 앱 아이콘 |
 | `build-app.sh` | 릴리즈 빌드 후 아이콘을 컴파일해 `UMC Tree.app` 번들로 묶습니다. 앱 버전은 `RemoteConfigEditorApp.version` 에서 읽습니다 |
+| `release.sh` | `build-app.sh` 로 만든 앱을 `UMC-Tree.dmg` 로 묶어 GitHub 릴리즈를 만듭니다 |
+
+직접 빌드하려면 Xcode 26 이상이 필요합니다. 앱 아이콘을 컴파일하는 `actool` 이 Xcode 에 들어 있습니다. `swift run` 으로만 띄울 거면 Swift 6.2 이상 툴체인으로도 됩니다.
 
 ```sh
 cd Editor
+./build-app.sh
+open ".build/UMC Tree.app"
 swift test
 ```
 
+- `swift run` 이나 Xcode 에서 `Editor/Package.swift` 를 열고 Run 해도 됩니다. 이렇게 띄우면 앱 번들이 없어서 Dock 에 아이콘이 보이지 않고 업데이트 확인도 하지 않습니다
+- `swift run` 으로 띄웠다면 그 터미널 창을 닫는 순간 앱도 꺼집니다. 적용하는 동안에는 터미널을 닫지 마세요
+
 테스트는 저장소의 `app-config.json` 을 원문 바이트 그대로 다시 쓰는지, 글자 수·종료일·최소 버전 검사가 `schema.json` 과 같은지 확인합니다.
+
+### 새 버전 릴리즈
+
+1. `RemoteConfigEditorApp.swift` 의 `version` 을 올려 PR 로 `main` 에 머지합니다
+2. `main` 을 받은 뒤 릴리즈 노트를 파일로 써 두고 실행합니다
+
+   ```sh
+   git checkout main && git pull
+   Editor/release.sh ~/릴리즈노트.md
+   ```
+
+3. `v1.1.0` 같은 태그와 릴리즈가 생기고 `UMC-Tree.dmg` 가 첨부됩니다. 이미 설치한 앱은 다음에 켤 때 업데이트 알림을 받습니다
+
+- 태그는 코드의 `version` 으로 만듭니다. 태그와 앱 버전이 다르면 업데이트해도 알림이 계속 뜨기 때문입니다
+- 커밋하지 않은 변경이 있으면 멈춥니다. 태그는 지금 커밋에 붙으므로 그 커밋이 원격에 올라가 있어야 합니다
+- DMG 파일 이름은 늘 `UMC-Tree.dmg` 로 같습니다. 이름을 바꾸면 README 의 설치 링크가 깨집니다
 
 ### `schema.json` 을 바꿀 때
 
