@@ -5,7 +5,7 @@
 앱을 새로 배포하지 않아도 특정 화면에 안내를 켜거나 끄고, 문구를 바꾸고, 강제 업데이트 기준 버전을 올릴 수 있습니다.
 App Store 심사와 사용자 업데이트를 기다릴 필요가 없습니다.
 
-설정은 **macOS 편집 앱**(`Editor/`)에서 폼으로 고치는 방법을 추천합니다. JSON 을 직접 만지지 않아도 되고 PR 생성부터 배포 확인까지 앱이 대신 진행합니다.
+설정은 macOS 편집 앱 **UMC Tree**(`Editor/`)에서 폼으로 고치는 방법을 추천합니다. JSON 을 직접 만지지 않아도 되고 PR 생성부터 배포 확인까지 앱이 대신 진행합니다.
 
 > **현재 상태:** iOS 앱 연동 작업은 아직 진행 중입니다([UMC-PRODUCT/umc-product-iOS#1389](https://github.com/UMC-PRODUCT/umc-product-iOS/issues/1389)). 이 저장소의 값을 바꿔도 지금은 앱 동작이 바뀌지 않습니다.
 
@@ -27,7 +27,7 @@ GitHub Pages 로 서빙되며 캐시가 10분입니다. **머지 후 최대 10�
 | `app-config.json` | 실제 설정. 이것만 고치면 됩니다 |
 | `schema.json` | 값의 규칙. 오타·잘못된 값을 걸러냅니다 |
 | `.github/workflows/validate.yml` | PR 마다 위 규칙으로 검사 |
-| `Editor/` | 설정 편집 macOS 앱 (SwiftUI, Swift Package) |
+| `Editor/` | 설정 편집 macOS 앱 UMC Tree (SwiftUI, Swift Package) |
 
 ## 고치는 방법
 
@@ -63,7 +63,7 @@ Xcode 에서 `Editor/Package.swift` 를 열고 Run 해도 됩니다.
 - 앱은 켜질 때 `main` 의 `app-config.json` 을 불러옵니다. 창 제목 옆에 `main · 방금 불러옴` 처럼 불러온 시각이 보입니다
 - `gh` 가 없거나 로그인이 안 돼 있으면 앱 화면에 필요한 명령이 뜹니다. 터미널에서 실행한 뒤 **다시 시도** 를 누르세요
 - `swift run` 으로 띄웠다면 그 터미널 창을 닫는 순간 앱도 꺼집니다. 적용하는 동안에는 터미널을 닫지 마세요
-- 앱 버전은 메뉴 막대의 **iOS 원격 설정에 관하여** 에서 확인합니다. 릴리즈 목록은 [Releases](https://github.com/UMC-PRODUCT/umc-product-iOS-remote-config/releases) 에 있습니다
+- 앱 버전은 메뉴 막대의 **UMC Tree에 관하여** 에서 확인합니다. 릴리즈 목록은 [Releases](https://github.com/UMC-PRODUCT/umc-product-iOS-remote-config/releases) 에 있습니다
 
 #### 화면 구성
 

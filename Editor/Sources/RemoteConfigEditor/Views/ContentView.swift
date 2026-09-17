@@ -20,7 +20,7 @@ struct ContentView: View {
     var body: some View {
         TimelineView(.everyMinute) { context in
             content
-                .navigationTitle("iOS 원격 설정")
+                .navigationTitle("UMC Tree")
                 .navigationSubtitle(subtitle(now: context.date))
         }
         .toolbar { toolbar }
