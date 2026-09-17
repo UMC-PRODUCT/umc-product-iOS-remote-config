@@ -43,7 +43,8 @@ GitHub Pages 로 서빙되며 캐시가 10분입니다. **머지 후 최대 10�
 
 #### 준비
 
-- macOS 26 이상, Xcode 26 이상(또는 Swift 6.2 이상 툴체인)
+- macOS 26 이상, Xcode 26 이상
+  - 앱 아이콘을 컴파일하는 `actool` 이 Xcode 에 들어 있습니다. `swift run` 으로만 띄울 거면 Swift 6.2 이상 툴체인으로도 됩니다
 - `brew install gh` 로 [GitHub CLI](https://cli.github.com) 설치
   - 앱은 `PATH` 와 `/opt/homebrew/bin`, `/usr/local/bin`, `/opt/local/bin`, `~/.local/share/mise/shims` 에서 `gh` 를 찾습니다
 - `gh auth login` 으로 로그인
@@ -55,10 +56,13 @@ GitHub Pages 로 서빙되며 캐시가 10분입니다. **머지 후 최대 10�
 ```sh
 gh repo clone UMC-PRODUCT/umc-product-iOS-remote-config
 cd umc-product-iOS-remote-config/Editor
-swift run
+./build-app.sh
+open ".build/UMC Tree.app"
 ```
 
-Xcode 에서 `Editor/Package.swift` 를 열고 Run 해도 됩니다.
+`build-app.sh` 는 아이콘과 이름이 들어간 `UMC Tree.app` 을 `Editor/.build/` 에 만듭니다. `/Applications` 로 옮겨 두면 Spotlight 에서 바로 켤 수 있습니다. 코드를 새로 받은 뒤에는 스크립트를 다시 실행하세요.
+
+개발할 때는 `swift run` 이나 Xcode 에서 `Editor/Package.swift` 를 열고 Run 해도 됩니다. 이렇게 띄우면 앱 번들이 없어서 Dock 에 아이콘이 보이지 않습니다.
 
 - 앱은 켜질 때 `main` 의 `app-config.json` 을 불러옵니다. 창 제목 옆에 `main · 방금 불러옴` 처럼 불러온 시각이 보입니다
 - `gh` 가 없거나 로그인이 안 돼 있으면 앱 화면에 필요한 명령이 뜹니다. 터미널에서 실행한 뒤 **다시 시도** 를 누르세요
@@ -283,6 +287,8 @@ Xcode 에서 `Editor/Package.swift` 를 열고 Run 해도 됩니다.
 | `EditorModel.swift` | 불러오기, 변경 요약, 적용 단계 진행 |
 | `GitHubClient.swift` | `gh` 토큰으로 GitHub REST API 호출. 저장소 이름·기본 브랜치 상수도 여기 있습니다 |
 | `Views/` | SwiftUI 화면 |
+| `AppIcon.icon` | Icon Composer 로 만든 Liquid Glass 앱 아이콘 |
+| `build-app.sh` | 릴리즈 빌드 후 아이콘을 컴파일해 `UMC Tree.app` 번들로 묶습니다. 앱 버전은 `RemoteConfigEditorApp.version` 에서 읽습니다 |
 
 ```sh
 cd Editor
