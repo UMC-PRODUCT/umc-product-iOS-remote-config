@@ -7,6 +7,8 @@ App Store 심사와 사용자 업데이트를 기다릴 필요가 없습니다.
 
 설정은 macOS 편집 앱 **UMC Tree**(`Editor/`)에서 폼으로 고치는 방법을 추천합니다. JSON 을 직접 만지지 않아도 되고 PR 생성부터 배포 확인까지 앱이 대신 진행합니다.
 
+![UMC Tree 편집 화면. 왼쪽 사이드바에서 항목을 고르고 가운데 폼에서 값을 고치고 오른쪽 iPhone 미리보기로 모양을 확인합니다](docs/images/notice-blocking.png)
+
 > **현재 상태:** iOS 앱 연동 작업은 아직 진행 중입니다([UMC-PRODUCT/umc-product-iOS#1389](https://github.com/UMC-PRODUCT/umc-product-iOS/issues/1389)). 이 저장소의 값을 바꿔도 지금은 앱 동작이 바뀌지 않습니다.
 
 ## 앱이 읽는 주소
@@ -28,6 +30,7 @@ GitHub Pages 로 서빙되며 캐시가 10분입니다. **머지 후 최대 10�
 | `schema.json` | 값의 규칙. 오타·잘못된 값을 걸러냅니다 |
 | `.github/workflows/validate.yml` | PR 마다 위 규칙으로 검사 |
 | `Editor/` | 설정 편집 macOS 앱 UMC Tree (SwiftUI, Swift Package) |
+| `docs/images/` | README 에 쓰는 편집 앱 스크린샷 |
 
 ## 고치는 방법
 
@@ -102,6 +105,10 @@ open ".build/UMC Tree.app"
 | **문구** › 제목 · 본문 | `title` · `body` | 옆에 `12/40` 처럼 글자 수가 보입니다 |
 | **기간** › 종료일 | `until` | 켜면 오늘 날짜로 시작하고 달력에서 고릅니다. 끄면 필드가 빠집니다 |
 
+사이드바에서 **강제 업데이트** 를 고르면 최소 버전 입력 칸과 값에 따른 동작 설명이 나옵니다.
+
+![강제 업데이트 폼. 최소 버전 입력 칸과 지우기 버튼, 값에 따른 동작 설명](docs/images/minimum-version.png)
+
 #### 사용 흐름
 
 1. 사이드바에서 항목을 고릅니다
@@ -111,6 +118,9 @@ open ".build/UMC Tree.app"
 3. 툴바의 **적용**(⌘S)을 누릅니다
 4. **변경 사항 적용** 시트에서 변경 요약과 커밋 메시지를 확인하고 **적용**
    - 커밋 메시지는 `원격 설정: 안내 켜짐 · 서비스 점검 중이에요` 처럼 자동으로 채워지며 고칠 수 있습니다
+
+   <img src="docs/images/apply-sheet.png" alt="변경 사항 적용 시트. 변경 요약, 커밋 메시지 입력 칸, 취소·적용 버튼" width="640">
+
 5. **충돌 확인 → 브랜치 만들기 → 커밋 → PR 열기 → 검사 (validate) → 머지 → 배포 (GitHub Pages)** 가 차례로 진행됩니다
 6. **배포됐어요** 가 뜨면 끝입니다. 앱에는 최대 10분 뒤에 반영됩니다
 
@@ -233,6 +243,12 @@ open ".build/UMC Tree.app"
 |---|---|---|
 | `INFO` | 안내 | 제목 + 본문 + 확인 버튼. 닫으면 앱을 다시 켜기 전까지 또 뜨지 않습니다 |
 | `BLOCKING` | 차단 | 탭바까지 덮는 전체 화면. **닫을 수 없고, 버튼 없이 안내 문구만** 보입니다. 점검처럼 이용을 막아야 할 때 씁니다 |
+
+편집 앱의 **iPhone 미리보기** 에서 두 모양을 바로 비교할 수 있습니다.
+
+| 안내 (`INFO`) | 차단 (`BLOCKING`) |
+|---|---|
+| <img src="docs/images/preview-info.png" alt="안내 모양 미리보기. 화면 위에 제목, 본문, 확인 버튼이 있는 팝업이 뜹니다" width="260"> | <img src="docs/images/preview-blocking.png" alt="차단 모양 미리보기. 버튼 없이 제목과 본문만 있는 전체 화면이 뜹니다" width="260"> |
 
 - iOS 앱은 스스로 종료할 수 없어서 Android 판과 달리 "앱 종료" 버튼이 없습니다
 - `ALL` + `BLOCKING` 조합이 **서비스 점검(킬스위치)** 입니다
