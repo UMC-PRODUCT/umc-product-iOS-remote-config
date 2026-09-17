@@ -13,18 +13,38 @@ struct RemoteConfigEditorApp: App {
 
     // MARK: - Property
 
+    // 릴리즈 태그(v1.0.0)와 맞춘다. SwiftPM 실행 파일은 Info.plist 가 없어 여기서 관리한다
+    static let version = "1.0.0"
+
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+
+    // MARK: - Init
+
+    // 앱 번들이 없어 메뉴 막대 앱 이름이 실행 파일 이름(RemoteConfigEditor)으로 뜬다. 메뉴를 만들기 전에 바꾼다
+    init() {
+        ProcessInfo.processInfo.processName = "UMC Tree"
+    }
 
     // MARK: - Body
 
     var body: some Scene {
-        Window("iOS 원격 설정", id: "editor") {
+        Window("UMC Tree", id: "editor") {
             ContentView(model: appDelegate.model)
                 .frame(minWidth: 900, minHeight: 600)
                 .environment(\.locale, Locale(identifier: "ko_KR"))
         }
         .defaultSize(width: 1100, height: 720)
         .windowResizability(.contentMinSize)
+        .commands {
+            CommandGroup(replacing: .appInfo) {
+                Button("UMC Tree에 관하여") {
+                    NSApplication.shared.orderFrontStandardAboutPanel(options: [
+                        .applicationName: "UMC Tree",
+                        .applicationVersion: Self.version,
+                    ])
+                }
+            }
+        }
     }
 }
 
