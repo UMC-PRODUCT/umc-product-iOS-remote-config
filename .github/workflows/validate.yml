@@ -1,0 +1,25 @@
+name: config 검증
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install jsonschema
+      - name: JSON 문법·스키마 검사
+        run: |
+          python3 - <<'PY'
+          import json, sys, jsonschema
+          try:
+              cfg = json.load(open("app-config.json"))
+          except Exception as e:
+              sys.exit(f"JSON 문법 오류: {e}")
+          # format_checker 가 없으면 "until": "2026/09/17" 같은 값이 통과한다
+          jsonschema.validate(cfg, json.load(open("schema.json")),
+                              format_checker=jsonschema.FormatChecker())
+          print(f"통과 — 최소 버전 '{cfg['minimumVersion'] or '없음'}', 안내 {len(cfg['notices'])}건")
+          PY
