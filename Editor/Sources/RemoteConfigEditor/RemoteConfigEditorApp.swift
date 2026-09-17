@@ -14,7 +14,7 @@ struct RemoteConfigEditorApp: App {
     // MARK: - Property
 
     // 릴리즈 태그(v1.0.0)와 맞춘다. SwiftPM 실행 파일은 Info.plist 가 없어 여기서 관리한다
-    static let version = "1.0.0"
+    static let version = "1.1.0"
 
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
