@@ -43,6 +43,9 @@ struct RemoteConfigEditorApp: App {
                         .applicationVersion: Self.version,
                     ])
                 }
+                Button("업데이트 확인…") {
+                    Task { await Updater.checkForUpdates(model: appDelegate.model, userInitiated: true) }
+                }
             }
         }
     }
@@ -64,6 +67,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApplication.shared.activate()
+        Task { await Updater.checkForUpdates(model: model, userInitiated: false) }
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
