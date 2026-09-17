@@ -1,5 +1,7 @@
 # umc-product-iOS-remote-config
 
+**[⬇️ 편집 앱 UMC Tree 내려받기 (DMG)](https://github.com/UMC-PRODUCT/umc-product-iOS-remote-config/releases/latest/download/UMC-Tree.dmg)** · macOS 26 이상 · [설치 방법](#설치)
+
 [umc-product-iOS](https://github.com/UMC-PRODUCT/umc-product-iOS) 앱이 **원격으로 읽어가는 설정 저장소**입니다.
 
 앱을 새로 배포하지 않아도 특정 화면에 안내를 켜거나 끄고, 문구를 바꾸고, 강제 업데이트 기준 버전을 올릴 수 있습니다.
