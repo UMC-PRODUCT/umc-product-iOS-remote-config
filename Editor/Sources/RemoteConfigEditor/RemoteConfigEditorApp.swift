@@ -13,6 +13,9 @@ struct RemoteConfigEditorApp: App {
 
     // MARK: - Property
 
+    // 릴리즈 태그(v1.0.0)와 맞춘다. SwiftPM 실행 파일은 Info.plist 가 없어 여기서 관리한다
+    static let version = "1.0.0"
+
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     // MARK: - Body
@@ -25,6 +28,16 @@ struct RemoteConfigEditorApp: App {
         }
         .defaultSize(width: 1100, height: 720)
         .windowResizability(.contentMinSize)
+        .commands {
+            CommandGroup(replacing: .appInfo) {
+                Button("iOS 원격 설정에 관하여") {
+                    NSApplication.shared.orderFrontStandardAboutPanel(options: [
+                        .applicationName: "iOS 원격 설정",
+                        .applicationVersion: Self.version,
+                    ])
+                }
+            }
+        }
     }
 }
 
