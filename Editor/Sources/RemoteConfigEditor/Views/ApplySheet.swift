@@ -10,7 +10,7 @@ import SwiftUI
 fileprivate enum Constants {
     static let width: CGFloat = 480
     static let padding: CGFloat = 24
-    static let boxCornerRadius: CGFloat = 10
+    static let boxCornerRadius: CGFloat = 16
     static let finishedSymbolSize: CGFloat = 56
 }
 
@@ -37,6 +37,7 @@ struct ApplySheet: View {
         }
         .padding(Constants.padding)
         .frame(width: Constants.width)
+        .background(EditorTheme.canvas)
         .interactiveDismissDisabled(model.applyPhase == .running)
     }
 
@@ -44,7 +45,7 @@ struct ApplySheet: View {
         let isDangerous = model.isDangerous
         return VStack(alignment: .leading, spacing: 16) {
             Text("변경 사항 적용")
-                .font(.title2.bold())
+                .font(.system(size: 24, weight: .semibold))
 
             if isDangerous {
                 Label(
@@ -54,7 +55,7 @@ struct ApplySheet: View {
                 .foregroundStyle(.red)
                 .padding(12)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(.red.opacity(0.12), in: .rect(cornerRadius: Constants.boxCornerRadius))
+                .background(.red.opacity(0.1), in: .rect(cornerRadius: Constants.boxCornerRadius))
             }
 
             VStack(alignment: .leading, spacing: 8) {
@@ -70,28 +71,39 @@ struct ApplySheet: View {
             .padding(12)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
-                .quaternary.opacity(0.5),
+                EditorTheme.canvasSoft,
                 in: .rect(cornerRadius: Constants.boxCornerRadius)
             )
+            .overlay {
+                RoundedRectangle(cornerRadius: Constants.boxCornerRadius)
+                    .stroke(EditorTheme.hairlineSoft, lineWidth: 1)
+            }
 
             VStack(alignment: .leading, spacing: 6) {
                 Text("커밋 메시지")
                     .font(.callout)
                     .foregroundStyle(.secondary)
-                TextField("커밋 메시지", text: $model.commitMessage)
-                    .textFieldStyle(.roundedBorder)
+                TextField(
+                    "커밋 메시지",
+                    text: $model.commitMessage,
+                    prompt: Text("커밋 메시지").foregroundStyle(EditorTheme.textFaint)
+                )
+                    .textFieldStyle(.plain)
                     .labelsHidden()
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .background(EditorTheme.field, in: .rect(cornerRadius: Constants.boxCornerRadius))
             }
 
             HStack {
                 Spacer()
                 Button("취소", role: .cancel) { dismiss() }
+                    .buttonStyle(OutlinePillButtonStyle())
                     .keyboardShortcut(.cancelAction)
                 Button(isDangerous ? "앱 막기 적용" : "적용") {
                     Task { await model.apply() }
                 }
-                .buttonStyle(.glassProminent)
-                .tint(isDangerous ? .red : nil)
+                .buttonStyle(InkPillButtonStyle(fill: isDangerous ? .red : EditorTheme.ink))
                 .keyboardShortcut(isDangerous ? nil : .defaultAction)
                 .disabled(model.commitMessage.trimmingCharacters(in: .whitespaces).isEmpty)
             }
@@ -130,13 +142,13 @@ struct ApplySheet: View {
             Text("배포됐어요")
                 .font(.title2.bold())
             Text("앱에는 캐시 때문에 최대 10분 뒤에 반영돼요.")
-                .foregroundStyle(.secondary)
+                .foregroundStyle(EditorTheme.textMuted)
             HStack {
                 if let url = model.pullRequestURL {
                     Button("PR 보기") { openURL(url) }
                 }
                 Button("닫기") { dismiss() }
-                    .buttonStyle(.glassProminent)
+                    .buttonStyle(InkPillButtonStyle())
                     .keyboardShortcut(.defaultAction)
             }
             .padding(.top, 8)

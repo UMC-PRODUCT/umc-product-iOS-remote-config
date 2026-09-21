@@ -19,9 +19,18 @@ struct MinimumVersionView: View {
         Form {
             Section {
                 HStack {
-                    TextField("최소 버전", text: $config.minimumVersion, prompt: Text("예: 2.3.0"))
+                    TextField(
+                        "최소 버전",
+                        text: $config.minimumVersion,
+                        prompt: Text("예: 2.3.0").foregroundStyle(EditorTheme.textFaint)
+                    )
                         .font(.body.monospaced())
+                        .textFieldStyle(.plain)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 10)
+                        .background(EditorTheme.field, in: .rect(cornerRadius: EditorTheme.radiusSmall))
                     Button("지우기") { config.minimumVersion = "" }
+                        .buttonStyle(OutlinePillButtonStyle())
                         .disabled(config.minimumVersion.isEmpty)
                 }
             } header: {
@@ -47,8 +56,10 @@ struct MinimumVersionView: View {
                 Text("동작")
             }
             .font(.callout)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(EditorTheme.textMuted)
         }
         .formStyle(.grouped)
+        .scrollContentBackground(.hidden)
+        .background(EditorTheme.canvas)
     }
 }

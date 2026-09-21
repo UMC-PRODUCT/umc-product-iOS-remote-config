@@ -23,6 +23,8 @@ struct ContentView: View {
                 .navigationTitle("UMC Tree")
                 .navigationSubtitle(subtitle(now: context.date))
         }
+        .tint(EditorTheme.ink)
+        .background(EditorTheme.canvas)
         .toolbar { toolbar }
         .sheet(isPresented: $model.isApplySheetPresented) {
             ApplySheet(model: model)
@@ -50,6 +52,8 @@ struct ContentView: View {
                     .navigationSplitViewColumnWidth(min: 220, ideal: 260)
             } detail: {
                 detail
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(EditorTheme.canvas)
             }
         }
     }
@@ -107,6 +111,7 @@ struct ContentView: View {
     private var toolbar: some ToolbarContent {
         ToolbarItem(placement: .navigation) {
             Button("새로고침", systemImage: "arrow.clockwise", action: requestReload)
+                .buttonStyle(OutlinePillButtonStyle())
                 .help("main 에서 다시 불러오기")
                 .disabled(model.isLoading)
         }
@@ -114,18 +119,20 @@ struct ContentView: View {
             Button("GitHub", systemImage: "arrow.up.right.square") {
                 openURL(GitHubClient.repositoryURL)
             }
+            .buttonStyle(OutlinePillButtonStyle())
             .help("GitHub 저장소 열기")
         }
         ToolbarSpacer(.fixed, placement: .primaryAction)
         if model.hasChanges {
             ToolbarItem(placement: .primaryAction) {
                 Button("되돌리기") { model.revert() }
+                    .buttonStyle(OutlinePillButtonStyle())
                     .help("불러온 상태로 되돌리기")
             }
         }
         ToolbarItem(placement: .primaryAction) {
             Button("적용") { model.beginApply() }
-                .buttonStyle(.glassProminent)
+                .buttonStyle(InkPillButtonStyle())
                 .keyboardShortcut("s")
                 .disabled(model.applyBlockedReason != nil)
                 .help(model.applyBlockedReason ?? "변경 사항을 main 에 적용해요 (⌘S)")
@@ -179,8 +186,8 @@ private struct CommandText: View {
         Text(command)
             .font(.body.monospaced())
             .textSelection(.enabled)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 6)
-            .background(.quaternary, in: .rect(cornerRadius: 6))
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+            .background(EditorTheme.field, in: .rect(cornerRadius: EditorTheme.radiusSmall))
     }
 }
