@@ -3,6 +3,10 @@
 set -eu
 cd "$(dirname "$0")"
 
+# Developer ID 인증서는 이 Mac 의 키체인에서 찾는다. 여러 인증서가 있으면 SIGNING_IDENTITY 로 지정한다
+SIGNING_IDENTITY=${SIGNING_IDENTITY:-$(security find-identity -v -p codesigning | sed -n 's/.*"\(Developer ID Application: [^"]*\)".*/\1/p' | head -n 1)}
+[ -n "$SIGNING_IDENTITY" ] || { echo "Developer ID Application 인증서가 키체인에 없습니다" >&2; exit 1; }
+
 # actool 은 상대 경로를 엉뚱한 위치 기준으로 풀어서 절대 경로로 넘긴다
 APP="$PWD/.build/UMC Launchpad.app"
 # 버전은 코드 한 곳(RemoteConfigEditorApp.version)에서만 관리한다
@@ -56,7 +60,8 @@ cat > "$APP/Contents/Info.plist" <<EOF
 </plist>
 EOF
 
-# 번들에 Info.plist·리소스를 넣은 뒤 다시 서명해야 실행된다 (로컬 전용 ad-hoc 서명)
-codesign --force --sign - "$APP"
+# 공증에 필요한 Hardened Runtime 과 안전한 타임스탬프를 포함해 서명한다
+codesign --force --options runtime --timestamp --sign "$SIGNING_IDENTITY" "$APP"
+codesign --verify --strict --verbose=2 "$APP"
 
 echo "완료: $APP"

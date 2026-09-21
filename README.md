@@ -62,13 +62,13 @@ Codex 참고 문서와 관련 설계 링크는 [`AGENTS.md`](AGENTS.md)에 있�
 
 1. [UMC-Launchpad.dmg](https://github.com/UMC-PRODUCT/umc-product-iOS-remote-config/releases/latest/download/UMC-Launchpad.dmg) 를 받아 엽니다. 이 주소는 항상 최신 릴리즈를 가리킵니다
 2. 열린 창에서 `UMC Launchpad` 를 `Applications` 폴더로 끌어다 놓습니다
-3. 처음 실행하면 Apple이 악성 코드 여부를 확인하지 못했다는 경고가 나타날 수 있습니다. 공식 저장소의 릴리즈에서 받은 앱인지 확인한 뒤 **완료**를 누르고, **시스템 설정 › 개인정보 보호 및 보안**의 **보안** 섹션에서 **그래도 열기**를 선택합니다. 이어지는 확인 창에서 **열기**를 누르세요.
+3. 처음 실행할 때 악성 소프트웨어 확인 경고가 뜨지 않아야 합니다. 경고가 표시되면 공식 [릴리즈 페이지](https://github.com/UMC-PRODUCT/umc-product-iOS-remote-config/releases)에서 다운로드한 파일인지 확인하세요.
 
 앱을 `Applications` 폴더에 설치하지 않고 DMG나 다운로드 폴더에서 바로 실행하면 자동 업데이트가 작동하지 않습니다.
 
 #### 업데이트
 
-- 앱은 켜질 때 새 릴리즈가 있는지 확인합니다. 새 버전이 있으면 **UMC Launchpad 1.1.0 이 나왔어요** 같은 알림이 뜹니다
+- 앱은 켜질 때 새 릴리즈가 있는지 확인합니다. 새 버전이 있으면 **UMC Launchpad 1.1.1 이 나왔어요** 같은 알림이 뜹니다
 - **업데이트** 를 누르면 새 버전을 받아 앱을 바꿔 끼우고 다시 켭니다. 이때는 위 3번 같은 확인 창이 뜨지 않습니다
   - 적용하지 않은 변경은 사라집니다. 알림에도 그렇게 표시됩니다
   - 적용이 진행되는 중이면 업데이트하지 않습니다
