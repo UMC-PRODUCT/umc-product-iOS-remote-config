@@ -24,14 +24,51 @@ xcrun notarytool submit "$APP_ZIP" --keychain-profile "$NOTARY_PROFILE" --wait
 xcrun stapler staple "$APP"
 xcrun stapler validate "$APP"
 
-# Applications 바로가기를 같이 넣어 DMG 를 열면 끌어다 설치할 수 있게 한다
+# Finder 창 배경과 아이콘 배치를 포함한 읽기/쓰기 이미지를 만든다
 STAGE=.build/dmg
+RWDMG=.build/UMC-Launchpad-rw.dmg
 DMG=.build/UMC-Launchpad.dmg
 rm -rf "$STAGE"
 mkdir -p "$STAGE"
 ditto "$APP" "$STAGE/UMC Launchpad.app"
 ln -s /Applications "$STAGE/Applications"
-hdiutil create -volname "UMC Launchpad" -srcfolder "$STAGE" -format UDZO -ov "$DMG"
+mkdir -p "$STAGE/.background"
+swift Assets/dmg-background.swift "$STAGE/.background/background.png"
+hdiutil create -volname "UMC Launchpad" -srcfolder "$STAGE" -format UDRW -ov "$RWDMG"
+MOUNT=
+detach_mount() {
+    [ -z "$MOUNT" ] || hdiutil detach "$MOUNT" >/dev/null 2>&1 || true
+}
+trap detach_mount EXIT
+ATTACH_OUTPUT=$(hdiutil attach "$RWDMG" -readwrite -noverify -noautoopen)
+MOUNT=$(printf '%s\n' "$ATTACH_OUTPUT" | sed -n 's|.*\(/Volumes/.*\)$|\1|p' | tail -n 1)
+[ -n "$MOUNT" ] || { echo "DMG 볼륨을 찾지 못했습니다" >&2; exit 1; }
+osascript - "$MOUNT/.background/background.png" "${MOUNT##*/}" <<'APPLESCRIPT'
+on run argv
+    tell application "Finder"
+        tell disk (item 2 of argv)
+            open
+            set current view of container window to icon view
+            set toolbar visible of container window to false
+            set statusbar visible of container window to false
+            set bounds of container window to {120, 100, 920, 600}
+            set options to icon view options of container window
+            set arrangement of options to not arranged
+            set icon size of options to 96
+            set background picture of options to (POSIX file (item 1 of argv))
+            set position of item "UMC Launchpad.app" of container window to {215, 315}
+            set position of item "Applications" of container window to {615, 315}
+            close container window
+        end tell
+    end tell
+end run
+APPLESCRIPT
+sleep 2
+hdiutil detach "$MOUNT"
+MOUNT=
+trap - EXIT
+hdiutil convert "$RWDMG" -format UDZO -ov -o "$DMG"
+rm -f "$RWDMG"
 codesign --force --sign "$SIGNING_IDENTITY" --timestamp "$DMG"
 xcrun notarytool submit "$DMG" --keychain-profile "$NOTARY_PROFILE" --wait
 xcrun stapler staple "$DMG"
