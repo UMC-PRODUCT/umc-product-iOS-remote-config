@@ -33,6 +33,9 @@ GitHub Pages 로 서빙되며 캐시가 10분입니다. **머지 후 최대 10�
 | `.github/workflows/validate.yml` | PR 마다 위 규칙으로 검사 |
 | `Editor/` | 설정 편집 macOS 앱 UMC Tree (SwiftUI, Swift Package) |
 | `docs/images/` | README 에 쓰는 편집 앱 스크린샷 |
+| `AGENTS.md` | Codex 작업 시 참고할 기준 문서와 연결된 설계 문서 |
+
+Codex 참고 문서와 관련 설계 링크는 [`AGENTS.md`](AGENTS.md)에 있습니다. `Editor/` 화면을 수정할 때는 [macOS 디자인 핸드오프 설계](../Mobile_Planning_Repo/specs/macOS_디자인%20핸드오프_설계.md)도 확인합니다.
 
 ## 고치는 방법
 
