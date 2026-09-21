@@ -37,7 +37,7 @@ struct SidebarView: View {
                 if model.draft.notices.isEmpty {
                     Text("안내가 없어요. + 를 눌러 추가하세요.")
                         .font(.callout)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(EditorTheme.textMuted)
                 }
             } header: {
                 HStack {
@@ -45,12 +45,14 @@ struct SidebarView: View {
                     Spacer()
                     Button("안내 추가", systemImage: "plus") { model.addNotice() }
                         .labelStyle(.iconOnly)
-                        .buttonStyle(.borderless)
+                        .buttonStyle(OutlinePillButtonStyle())
                         .help("안내 추가")
                 }
             }
         }
         .listStyle(.sidebar)
+        .scrollContentBackground(.hidden)
+        .background(EditorTheme.canvasSoft)
     }
 
     private var minimumVersionRow: some View {
@@ -64,7 +66,7 @@ struct SidebarView: View {
                 }
                 Text(model.draft.minimumVersion.isEmpty ? "꺼짐" : model.draft.minimumVersion)
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(EditorTheme.textMuted)
             }
         } icon: {
             Image(systemName: "arrow.down.app")
@@ -108,7 +110,7 @@ private struct NoticeRow: View {
                             .imageScale(.small)
                     }
                     Text("\(notice.screen.label) · \(notice.template.label)")
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(EditorTheme.textMuted)
                 }
                 .font(.caption)
             }

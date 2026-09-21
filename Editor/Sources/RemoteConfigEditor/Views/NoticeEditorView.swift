@@ -103,8 +103,16 @@ struct NoticeEditorView: View {
             Section("문구") {
                 LabeledContent("제목") {
                     HStack(spacing: 8) {
-                        TextField("제목", text: $notice.title, prompt: Text("서비스 점검 중이에요"))
+                        TextField(
+                            "제목",
+                            text: $notice.title,
+                            prompt: Text("서비스 점검 중이에요").foregroundStyle(EditorTheme.textFaint)
+                        )
                             .labelsHidden()
+                            .textFieldStyle(.plain)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 10)
+                            .background(EditorTheme.field, in: .rect(cornerRadius: EditorTheme.radiusSmall))
                         CharacterCounter(text: notice.title, limit: Notice.titleLimit)
                     }
                 }
@@ -118,8 +126,8 @@ struct NoticeEditorView: View {
                         .font(.body)
                         .scrollContentBackground(.hidden)
                         .frame(height: Constants.bodyEditorHeight)
-                        .padding(6)
-                        .background(.quaternary.opacity(0.5), in: .rect(cornerRadius: 8))
+                        .padding(12)
+                        .background(EditorTheme.field, in: .rect(cornerRadius: EditorTheme.radiusSmall))
                 }
             }
 
@@ -143,6 +151,9 @@ struct NoticeEditorView: View {
             }
         }
         .formStyle(.grouped)
+        .scrollContentBackground(.hidden)
+        .background(EditorTheme.canvas)
+        .tint(EditorTheme.ink)
     }
 
     // MARK: - Function
@@ -168,7 +179,7 @@ private struct CharacterCounter: View {
     var body: some View {
         Text("\(count)/\(limit)")
             .font(.caption.monospacedDigit())
-            .foregroundStyle(count > limit ? Color.red : Color.secondary)
+            .foregroundStyle(count > limit ? Color.red : EditorTheme.textMuted)
     }
 }
 
@@ -184,12 +195,12 @@ private struct NoticePreview: View {
         VStack(spacing: 16) {
             Text("iPhone 미리보기")
                 .font(.caption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(EditorTheme.textMuted)
             phone
         }
         .padding(24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.secondary.opacity(0.06))
+        .background(EditorTheme.canvasSoft)
     }
 
     private var phone: some View {
