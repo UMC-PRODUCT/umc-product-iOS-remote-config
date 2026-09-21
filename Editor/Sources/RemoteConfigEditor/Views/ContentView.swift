@@ -131,7 +131,7 @@ struct ContentView: View {
             }
         }
         ToolbarItem(placement: .primaryAction) {
-            Button("적용") { model.beginApply() }
+            Button("최종 확인") { model.beginApply() }
                 .buttonStyle(InkPillButtonStyle())
                 .keyboardShortcut("s")
                 .disabled(model.applyBlockedReason != nil)

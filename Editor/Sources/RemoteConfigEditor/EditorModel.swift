@@ -84,6 +84,8 @@ final class EditorModel {
 
     var isApplySheetPresented = false
     var commitMessage = ""
+    var applyRequest = ApplyRequest()
+    private var requestConfig: AppConfig?
     private(set) var applyPhase: ApplyPhase = .confirming
     private(set) var pullRequestURL: URL?
     private var stepStates: [ApplyStep: StepState] = [:]
@@ -202,6 +204,30 @@ final class EditorModel {
 
     func beginApply() {
         guard applyBlockedReason == nil else { return }
+        if requestConfig != draft {
+            applyRequest = ApplyRequest()
+            let changed = draft.notices.filter { originalNoticesByID[$0.id] != $0 }
+            let removed = original.notices.filter { old in !draft.notices.contains { $0.id == old.id } }
+            let affected = changed + removed
+            applyRequest.scope = affected.map { $0.screen == .all ? "앱 전체" : $0.screen.label }
+                .joined(separator: " / ")
+            applyRequest.action = affected.map { notice in
+                let action = notice.template == .blocking ? "이용 차단" : "안내 메시지 표시"
+                return "\(notice.screen.label): \(action)"
+                    + (removed.contains { $0.id == notice.id } || !notice.enabled ? " 해제" : "")
+            }.joined(separator: "\n")
+            applyRequest.title = affected.map(\.title).joined(separator: "\n")
+            applyRequest.body = affected.map(\.body).joined(separator: "\n\n")
+            if draft.minimumVersion != original.minimumVersion {
+                applyRequest.scope += affected.isEmpty ? "앱 전체" : " / 앱 전체"
+                applyRequest.action += "\n최소 버전 변경: \(draft.minimumVersion.isEmpty ? "해제" : draft.minimumVersion)"
+                if affected.isEmpty {
+                    applyRequest.title = "해당 없음 (최소 버전 변경)"
+                    applyRequest.body = "해당 없음 (최소 버전 변경)"
+                }
+            }
+            requestConfig = draft
+        }
         let changes = self.changes
         let summary = changes.first?.text ?? "변경"
         let others = changes.count > 1 ? " 외 \(changes.count - 1)건" : ""
@@ -213,12 +239,15 @@ final class EditorModel {
     }
 
     func apply() async {
-        guard let client, applyPhase == .confirming else { return }
+        guard let client, applyPhase == .confirming,
+              applyBlockedReason == nil, applyRequest.isComplete,
+              !commitMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
         applyPhase = .running
 
         let config = draft
         let title = commitMessage.trimmingCharacters(in: .whitespacesAndNewlines)
-        let body = changes.map { "- \($0.text)" }.joined(separator: "\n") + "\n\n편집 앱에서 적용"
+        let body = applyRequest.markdown + "\n\n### 변경 사항\n\n"
+            + changes.map { "- \($0.text)" }.joined(separator: "\n") + "\n\n편집 앱에서 적용"
         let branch = "config/" + Self.branchTimestamp()
         let fileSHA = loadedFileSHA
         var isBranchCreated = false

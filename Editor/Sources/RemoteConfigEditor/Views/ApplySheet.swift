@@ -8,7 +8,7 @@
 import SwiftUI
 
 fileprivate enum Constants {
-    static let width: CGFloat = 480
+    static let width: CGFloat = 560
     static let padding: CGFloat = 24
     static let boxCornerRadius: CGFloat = 16
     static let finishedSymbolSize: CGFloat = 56
@@ -44,7 +44,7 @@ struct ApplySheet: View {
     private var confirmation: some View {
         let isDangerous = model.isDangerous
         return VStack(alignment: .leading, spacing: 16) {
-            Text("변경 사항 적용")
+            Text("요청 내용 작성")
                 .font(.system(size: 24, weight: .semibold))
 
             if isDangerous {
@@ -58,42 +58,51 @@ struct ApplySheet: View {
                 .background(.red.opacity(0.1), in: .rect(cornerRadius: Constants.boxCornerRadius))
             }
 
-            VStack(alignment: .leading, spacing: 8) {
-                ForEach(Array(model.changes.enumerated()), id: \.offset) { _, change in
-                    Label {
-                        Text(change.text)
-                    } icon: {
-                        Image(systemName: change.kind.symbolName)
-                            .foregroundStyle(change.kind.color)
-                    }
-                }
-            }
-            .padding(12)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
-                EditorTheme.canvasSoft,
-                in: .rect(cornerRadius: Constants.boxCornerRadius)
-            )
-            .overlay {
-                RoundedRectangle(cornerRadius: Constants.boxCornerRadius)
-                    .stroke(EditorTheme.hairlineSoft, lineWidth: 1)
-            }
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    requestFields
 
-            VStack(alignment: .leading, spacing: 6) {
-                Text("커밋 메시지")
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-                TextField(
-                    "커밋 메시지",
-                    text: $model.commitMessage,
-                    prompt: Text("커밋 메시지").foregroundStyle(EditorTheme.textFaint)
-                )
-                    .textFieldStyle(.plain)
-                    .labelsHidden()
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 10)
-                    .background(EditorTheme.field, in: .rect(cornerRadius: Constants.boxCornerRadius))
+                    VStack(alignment: .leading, spacing: 8) {
+                        ForEach(Array(model.changes.enumerated()), id: \.offset) { _, change in
+                            Label {
+                                Text(change.text)
+                            } icon: {
+                                Image(systemName: change.kind.symbolName)
+                                    .foregroundStyle(change.kind.color)
+                            }
+                        }
+                    }
+                    .padding(12)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(
+                        EditorTheme.canvasSoft,
+                        in: .rect(cornerRadius: Constants.boxCornerRadius)
+                    )
+                    .overlay {
+                        RoundedRectangle(cornerRadius: Constants.boxCornerRadius)
+                            .stroke(EditorTheme.hairlineSoft, lineWidth: 1)
+                    }
+
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("커밋 메시지")
+                            .font(.callout)
+                            .foregroundStyle(.secondary)
+                        TextField(
+                            "커밋 메시지",
+                            text: $model.commitMessage,
+                            prompt: Text("커밋 메시지").foregroundStyle(EditorTheme.textFaint)
+                        )
+                            .textFieldStyle(.plain)
+                            .labelsHidden()
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 10)
+                            .background(EditorTheme.field, in: .rect(cornerRadius: Constants.boxCornerRadius))
+                    }
+
+                }
+                .padding(2)
             }
+            .frame(maxHeight: 430)
 
             HStack {
                 Spacer()
@@ -105,8 +114,49 @@ struct ApplySheet: View {
                 }
                 .buttonStyle(InkPillButtonStyle(fill: isDangerous ? .red : EditorTheme.ink))
                 .keyboardShortcut(isDangerous ? nil : .defaultAction)
-                .disabled(model.commitMessage.trimmingCharacters(in: .whitespaces).isEmpty)
+                .disabled(!model.applyRequest.isComplete || model.commitMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
+        }
+    }
+
+    private var requestFields: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Text("요청 내용을 작성해주세요. 작성한 내용은 적용 PR에 기록돼요.")
+                .foregroundStyle(EditorTheme.textMuted)
+            requestField("요청 사유", prompt: "어떤 점검이나 문제가 발생했나요?", text: $model.applyRequest.reason)
+            requestField("대상 범위", prompt: "앱 전체 또는 특정 화면", text: $model.applyRequest.scope)
+            requestField("요청 작업", prompt: "이용 차단 또는 안내 메시지 표시", text: $model.applyRequest.action)
+            requestField("안내 제목", prompt: "사용자에게 보여줄 제목", text: $model.applyRequest.title)
+            requestField("안내 본문", prompt: "사용자에게 보여줄 본문", text: $model.applyRequest.body)
+            Text("대상·작업·문구에는 현재 변경 사항을 미리 채웠어요. 실제 앱 설정을 바꾸려면 취소 후 편집 화면에서 수정해주세요.")
+                .font(.callout)
+                .foregroundStyle(EditorTheme.textMuted)
+            requestField("적용 시점", prompt: "예: 즉시, 9월 22일 오전 2시 (한국 시간)", text: $model.applyRequest.applyTiming)
+            Toggle("종료 시점 미정", isOn: $model.applyRequest.endUnknown)
+            if !model.applyRequest.endUnknown {
+                requestField("종료 예상 시점", prompt: "언제 해제할 예정인가요?", text: $model.applyRequest.expectedEnd)
+            }
+            Text("시점은 요청 기록이며 자동 예약되지 않아요. 적용 버튼을 누르면 배포가 시작돼요.")
+                .font(.callout)
+                .foregroundStyle(EditorTheme.textMuted)
+            Label("점검이 끝나면 해제 요청도 꼭 전달해주세요.", systemImage: "info.circle")
+                .font(.callout.weight(.semibold))
+            if !model.applyRequest.isComplete {
+                Text("모든 항목을 작성하고, 종료 시점을 모르시면 ‘종료 시점 미정’을 선택해주세요.")
+                    .font(.callout)
+                    .foregroundStyle(EditorTheme.textMuted)
+            }
+        }
+    }
+
+    private func requestField(_ title: String, prompt: String, text: Binding<String>) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title).font(.callout.weight(.medium))
+            TextField(title, text: text, prompt: Text(prompt), axis: .vertical)
+                .lineLimit(1...4)
+                .textFieldStyle(.plain)
+                .padding(10)
+                .background(EditorTheme.field, in: .rect(cornerRadius: Constants.boxCornerRadius))
         }
     }
 
