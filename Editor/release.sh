@@ -51,13 +51,16 @@ on run argv
             set current view of container window to icon view
             set toolbar visible of container window to false
             set statusbar visible of container window to false
-            set bounds of container window to {120, 100, 920, 600}
+            set bounds of container window to {120, 100, 780, 522}
             set options to icon view options of container window
             set arrangement of options to not arranged
-            set icon size of options to 96
+            set icon size of options to 128
+            set text size of options to 13
+            set label position of options to bottom
+            set shows item info of options to false
             set background picture of options to (POSIX file (item 1 of argv))
-            set position of item "UMC Launchpad.app" of container window to {215, 315}
-            set position of item "Applications" of container window to {615, 315}
+            set position of item "UMC Launchpad.app" of container window to {180, 190}
+            set position of item "Applications" of container window to {480, 190}
             close container window
         end tell
     end tell
