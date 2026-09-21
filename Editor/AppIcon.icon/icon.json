@@ -1,40 +1,21 @@
 {
-  "fill" : "automatic",
+  "fill" : {
+    "automatic-gradient" : "srgb:0.03529,0.20000,0.47059,1.00000"
+  },
   "groups" : [
     {
       "layers" : [
         {
-          "image-name" : "p-nodes.png",
-          "name" : "p-nodes",
-          "position" : {
-            "scale" : 1,
-            "translation-in-points" : [
-              0,
-              -106.234375
-            ]
-          }
+          "image-name" : "04 · Configuration sliders.png",
+          "name" : "04 · Configuration sliders"
         },
         {
-          "image-name" : "p-branches.png",
-          "name" : "p-branches",
-          "position" : {
-            "scale" : 1,
-            "translation-in-points" : [
-              0,
-              109.3046875
-            ]
-          }
+          "image-name" : "03 · Glass tile.png",
+          "name" : "03 · Glass tile"
         },
         {
-          "image-name" : "p-canopy.png",
-          "name" : "p-canopy",
-          "position" : {
-            "scale" : 1,
-            "translation-in-points" : [
-              0,
-              -76.8125
-            ]
-          }
+          "image-name" : "02 · Launch platform.png",
+          "name" : "02 · Launch platform"
         }
       ],
       "shadow" : {
@@ -43,7 +24,7 @@
       },
       "translucency" : {
         "enabled" : true,
-        "value" : 0.5
+        "value" : 0.3
       }
     }
   ],
