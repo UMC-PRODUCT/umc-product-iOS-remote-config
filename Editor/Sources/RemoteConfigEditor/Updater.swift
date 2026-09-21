@@ -47,12 +47,12 @@ enum Updater {
             guard latest.compare(current, options: .numeric) == .orderedDescending,
                   let dmg = release.assets.first(where: { $0.name.hasSuffix(".dmg") })
             else {
-                if userInitiated { showAlert("최신 버전을 쓰고 있어요", "UMC Tree \(current)") }
+                if userInitiated { showAlert("최신 버전을 쓰고 있어요", "UMC Launchpad \(current)") }
                 return
             }
 
             let alert = NSAlert()
-            alert.messageText = "UMC Tree \(latest) 이 나왔어요"
+            alert.messageText = "UMC Launchpad \(latest) 이 나왔어요"
             alert.informativeText = "지금 버전은 \(current) 이에요. 업데이트를 받으면 앱이 다시 켜져요."
                 + (model.hasChanges ? "\n적용하지 않은 변경 사항은 사라져요." : "")
             alert.addButton(withTitle: "업데이트")
@@ -94,7 +94,7 @@ enum Updater {
 
         try await run("/usr/bin/hdiutil", "attach", dmg.path, "-nobrowse", "-readonly", "-mountpoint", mount.path)
         do {
-            try await run("/usr/bin/ditto", mount.appending(path: "UMC Tree.app").path, staged.path)
+            try await run("/usr/bin/ditto", mount.appending(path: "UMC Launchpad.app").path, staged.path)
         } catch {
             try? await run("/usr/bin/hdiutil", "detach", mount.path, "-force")
             throw error

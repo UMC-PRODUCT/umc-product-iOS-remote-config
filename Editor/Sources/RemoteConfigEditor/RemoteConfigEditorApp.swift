@@ -22,13 +22,13 @@ struct RemoteConfigEditorApp: App {
 
     // 앱 번들이 없어 메뉴 막대 앱 이름이 실행 파일 이름(RemoteConfigEditor)으로 뜬다. 메뉴를 만들기 전에 바꾼다
     init() {
-        ProcessInfo.processInfo.processName = "UMC Tree"
+        ProcessInfo.processInfo.processName = "UMC Launchpad"
     }
 
     // MARK: - Body
 
     var body: some Scene {
-        Window("UMC Tree", id: "editor") {
+        Window("UMC Launchpad", id: "editor") {
             ContentView(model: appDelegate.model)
                 .frame(minWidth: 900, minHeight: 600)
                 .environment(\.locale, Locale(identifier: "ko_KR"))
@@ -37,9 +37,9 @@ struct RemoteConfigEditorApp: App {
         .windowResizability(.contentMinSize)
         .commands {
             CommandGroup(replacing: .appInfo) {
-                Button("UMC Tree에 관하여") {
+                Button("UMC Launchpad에 관하여") {
                     NSApplication.shared.orderFrontStandardAboutPanel(options: [
-                        .applicationName: "UMC Tree",
+                        .applicationName: "UMC Launchpad",
                         .applicationVersion: Self.version,
                     ])
                 }

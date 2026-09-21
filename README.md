@@ -1,15 +1,15 @@
 # umc-product-iOS-remote-config
 
-**[⬇️ 편집 앱 UMC Tree 내려받기 (DMG)](https://github.com/UMC-PRODUCT/umc-product-iOS-remote-config/releases/latest/download/UMC-Tree.dmg)** · macOS 26 이상 · [설치 방법](#설치)
+**[⬇️ 편집 앱 UMC Launchpad 내려받기 (DMG)](https://github.com/UMC-PRODUCT/umc-product-iOS-remote-config/releases/latest/download/UMC-Launchpad.dmg)** · macOS 26 이상 · [설치 방법](#설치)
 
 [umc-product-iOS](https://github.com/UMC-PRODUCT/umc-product-iOS) 앱이 **원격으로 읽어가는 설정 저장소**입니다.
 
 앱을 새로 배포하지 않아도 특정 화면에 안내를 켜거나 끄고, 문구를 바꾸고, 강제 업데이트 기준 버전을 올릴 수 있습니다.
 App Store 심사와 사용자 업데이트를 기다릴 필요가 없습니다.
 
-설정은 macOS 편집 앱 **UMC Tree**(`Editor/`)에서 폼으로 고치는 방법을 추천합니다. JSON 을 직접 만지지 않아도 되고 PR 생성부터 배포 확인까지 앱이 대신 진행합니다.
+설정은 macOS 편집 앱 **UMC Launchpad**(`Editor/`)에서 폼으로 고치는 방법을 추천합니다. JSON 을 직접 만지지 않아도 되고 PR 생성부터 배포 확인까지 앱이 대신 진행합니다.
 
-![UMC Tree 편집 화면. 왼쪽 사이드바에서 항목을 고르고 가운데 폼에서 값을 고치고 오른쪽 iPhone 미리보기로 모양을 확인합니다](docs/images/notice-blocking.png)
+![UMC Launchpad 편집 화면. 왼쪽 사이드바에서 항목을 고르고 가운데 폼에서 값을 고치고 오른쪽 iPhone 미리보기로 모양을 확인합니다](docs/images/notice-blocking.png)
 
 > **현재 상태:** iOS 앱 연동 작업은 아직 진행 중입니다([UMC-PRODUCT/umc-product-iOS#1389](https://github.com/UMC-PRODUCT/umc-product-iOS/issues/1389)). 이 저장소의 값을 바꿔도 지금은 앱 동작이 바뀌지 않습니다.
 
@@ -31,7 +31,7 @@ GitHub Pages 로 서빙되며 캐시가 10분입니다. **머지 후 최대 10�
 | `app-config.json` | 실제 설정. 이것만 고치면 됩니다 |
 | `schema.json` | 값의 규칙. 오타·잘못된 값을 걸러냅니다 |
 | `.github/workflows/validate.yml` | PR 마다 위 규칙으로 검사 |
-| `Editor/` | 설정 편집 macOS 앱 UMC Tree (SwiftUI, Swift Package) |
+| `Editor/` | 설정 편집 macOS 앱 UMC Launchpad (SwiftUI, Swift Package) |
 | `docs/images/` | README 에 쓰는 편집 앱 스크린샷 |
 | `AGENTS.md` | Codex 작업 시 참고할 기준 문서와 연결된 설계 문서 |
 
@@ -60,22 +60,20 @@ Codex 참고 문서와 관련 설계 링크는 [`AGENTS.md`](AGENTS.md)에 있�
 
 #### 설치
 
-1. [UMC-Tree.dmg](https://github.com/UMC-PRODUCT/umc-product-iOS-remote-config/releases/latest/download/UMC-Tree.dmg) 를 받아 엽니다. 이 주소는 항상 최신 릴리즈를 가리킵니다
-2. 열린 창에서 `UMC Tree` 를 `Applications` 폴더로 끌어다 놓습니다
-3. 처음 한 번은 Apple 공증을 받지 않은 앱이라 **"UMC Tree"을(를) 열 수 없음** 창이 뜹니다. **완료** 를 누르고 아래 중 하나로 엽니다
-   - **시스템 설정 › 개인정보 보호 및 보안** 을 열어 아래쪽 **그래도 열기** 를 누릅니다
-   - 또는 터미널에서 `xattr -dr com.apple.quarantine "/Applications/UMC Tree.app"` 를 실행한 뒤 다시 켭니다
+1. [UMC-Launchpad.dmg](https://github.com/UMC-PRODUCT/umc-product-iOS-remote-config/releases/latest/download/UMC-Launchpad.dmg) 를 받아 엽니다. 이 주소는 항상 최신 릴리즈를 가리킵니다
+2. 열린 창에서 `UMC Launchpad` 를 `Applications` 폴더로 끌어다 놓습니다
+3. 처음 실행하면 Apple이 악성 코드 여부를 확인하지 못했다는 경고가 나타날 수 있습니다. 공식 저장소의 릴리즈에서 받은 앱인지 확인한 뒤 **완료**를 누르고, **시스템 설정 › 개인정보 보호 및 보안**의 **보안** 섹션에서 **그래도 열기**를 선택합니다. 이어지는 확인 창에서 **열기**를 누르세요.
 
-앱을 `Applications` 로 옮기지 않고 DMG 나 다운로드 폴더에서 바로 켜면 자동 업데이트가 되지 않습니다.
+앱을 `Applications` 폴더에 설치하지 않고 DMG나 다운로드 폴더에서 바로 실행하면 자동 업데이트가 작동하지 않습니다.
 
 #### 업데이트
 
-- 앱은 켜질 때 새 릴리즈가 있는지 확인합니다. 새 버전이 있으면 **UMC Tree 1.1.0 이 나왔어요** 같은 알림이 뜹니다
+- 앱은 켜질 때 새 릴리즈가 있는지 확인합니다. 새 버전이 있으면 **UMC Launchpad 1.1.0 이 나왔어요** 같은 알림이 뜹니다
 - **업데이트** 를 누르면 새 버전을 받아 앱을 바꿔 끼우고 다시 켭니다. 이때는 위 3번 같은 확인 창이 뜨지 않습니다
   - 적용하지 않은 변경은 사라집니다. 알림에도 그렇게 표시됩니다
   - 적용이 진행되는 중이면 업데이트하지 않습니다
-- 알림을 닫았다면 메뉴 막대 **UMC Tree › 업데이트 확인…** 으로 다시 확인할 수 있습니다
-- 앱 버전은 **UMC Tree에 관하여** 에서 확인합니다. 릴리즈 목록은 [Releases](https://github.com/UMC-PRODUCT/umc-product-iOS-remote-config/releases) 에 있습니다
+- 알림을 닫았다면 메뉴 막대 **UMC Launchpad › 업데이트 확인…** 으로 다시 확인할 수 있습니다
+- 앱 버전은 **UMC Launchpad에 관하여** 에서 확인합니다. 릴리즈 목록은 [Releases](https://github.com/UMC-PRODUCT/umc-product-iOS-remote-config/releases) 에 있습니다
 
 #### 실행
 
@@ -315,15 +313,15 @@ Codex 참고 문서와 관련 설계 링크는 [`AGENTS.md`](AGENTS.md)에 있�
 | `Views/` | SwiftUI 화면 |
 | `Updater.swift` | GitHub 최신 릴리즈를 확인하고 DMG 를 받아 앱을 바꿔 끼운 뒤 다시 켭니다 |
 | `AppIcon.icon` | Icon Composer 로 만든 Liquid Glass 앱 아이콘 |
-| `build-app.sh` | 릴리즈 빌드 후 아이콘을 컴파일해 `UMC Tree.app` 번들로 묶습니다. 앱 버전은 `RemoteConfigEditorApp.version` 에서 읽습니다 |
-| `release.sh` | `build-app.sh` 로 만든 앱을 `UMC-Tree.dmg` 로 묶어 GitHub 릴리즈를 만듭니다 |
+| `build-app.sh` | 릴리즈 빌드 후 아이콘을 컴파일해 `UMC Launchpad.app` 번들로 묶습니다. 앱 버전은 `RemoteConfigEditorApp.version` 에서 읽습니다 |
+| `release.sh` | `build-app.sh` 로 만든 앱을 `UMC-Launchpad.dmg` 로 묶어 GitHub 릴리즈를 만듭니다 |
 
 직접 빌드하려면 Xcode 26 이상이 필요합니다. 앱 아이콘을 컴파일하는 `actool` 이 Xcode 에 들어 있습니다. `swift run` 으로만 띄울 거면 Swift 6.2 이상 툴체인으로도 됩니다.
 
 ```sh
 cd Editor
 ./build-app.sh
-open ".build/UMC Tree.app"
+open ".build/UMC Launchpad.app"
 swift test
 ```
 
@@ -342,11 +340,11 @@ swift test
    Editor/release.sh ~/릴리즈노트.md
    ```
 
-3. `v1.1.0` 같은 태그와 릴리즈가 생기고 `UMC-Tree.dmg` 가 첨부됩니다. 이미 설치한 앱은 다음에 켤 때 업데이트 알림을 받습니다
+3. `v1.1.0` 같은 태그와 릴리즈가 생기고 `UMC-Launchpad.dmg` 가 첨부됩니다. 이미 설치한 앱은 다음에 켤 때 업데이트 알림을 받습니다
 
 - 태그는 코드의 `version` 으로 만듭니다. 태그와 앱 버전이 다르면 업데이트해도 알림이 계속 뜨기 때문입니다
 - 커밋하지 않은 변경이 있으면 멈춥니다. 태그는 지금 커밋에 붙으므로 그 커밋이 원격에 올라가 있어야 합니다
-- DMG 파일 이름은 늘 `UMC-Tree.dmg` 로 같습니다. 이름을 바꾸면 README 의 설치 링크가 깨집니다
+- DMG 파일 이름은 늘 `UMC-Launchpad.dmg` 로 같습니다. 이름을 바꾸면 README 의 설치 링크가 깨집니다
 
 ### `schema.json` 을 바꿀 때
 
