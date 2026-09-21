@@ -20,7 +20,7 @@ struct ContentView: View {
     var body: some View {
         TimelineView(.everyMinute) { context in
             content
-                .navigationTitle("UMC Tree")
+                .navigationTitle("UMC Launchpad")
                 .navigationSubtitle(subtitle(now: context.date))
         }
         .tint(EditorTheme.ink)
